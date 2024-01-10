@@ -9,7 +9,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EShopContext>(
     options =>
         options.UseSqlServer(
-            builder.Configuration.GetConnectionString("EShopConnection")));
+            builder.Configuration.GetConnectionString("ElectronicShopConnection")));
 
 var app = builder.Build();
 

@@ -11,8 +11,8 @@ using eShop.Data.Contexts;
 namespace eShop.Data.Migrations
 {
     [DbContext(typeof(EShopContext))]
-    [Migration("20240110111120_Initial")]
-    partial class Initial
+    [Migration("20240110160448_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
