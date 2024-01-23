@@ -1,3 +1,5 @@
+using eShop.API.Extensions.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -49,7 +51,10 @@ void RegisterServices()
 void RegisterEndpoints()
 {
     app.AddEndpoint<Category, CategoryPostDTO, CategoryPutDTO, CategoryGetDTO>();
-    
+
+    //Should be placed in separate API project
+    //app.AddEndpoint<ProductCategory, ProductCategoryDTO>();
+
 }
 void ConfigureAutoMapper()
 {
@@ -59,6 +64,7 @@ void ConfigureAutoMapper()
         cfg.CreateMap<Category, CategoryPutDTO>().ReverseMap();
         cfg.CreateMap<Category, CategoryGetDTO>().ReverseMap();
         cfg.CreateMap<Category, CategorySmallGetDTO>().ReverseMap();
+        cfg.CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
         //cfg.CreateMap<Filter, FilterGetDTO>().ReverseMap();
         //cfg.CreateMap<Size, OptionDTO>().ReverseMap();
         //cfg.CreateMap<Color, OptionDTO>().ReverseMap();

@@ -1,4 +1,6 @@
-﻿namespace eShop.API.Extensions.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace eShop.API.Extensions.Extensions;
 
 public static class HttpExtensions
 {
@@ -13,11 +15,56 @@ public static class HttpExtensions
         app.MapDelete($"/api/{node}s/" + "{id}", HttpDeleteAsync<TEntity>);
     }
 
+    public static void AddEndpoint<TEntity, TDto>(this WebApplication app)
+        where TEntity : class where TDto : class
+    {
+        var node = typeof(TEntity).Name.ToLower();
+        app.MapPost($"/api/{node}s", HttpPostReferenceAsync<TEntity, TDto>);
+        app.MapDelete($"/api/{node}s", async (IDbService db, [FromBody] TDto dto) =>
+        {
+            try
+            {
+                if (!db.Delete<TEntity, TDto>(dto)) 
+                    return Results.NotFound();
+
+                if (await db.SaveChangesAsync()) 
+                    return Results.NoContent();
+            }
+            catch
+            {
+            }
+
+            return Results.BadRequest($"Couldn't delete the {typeof(TEntity).Name} entity.");
+        });
+
+    }
+    public static async Task<IResult> HttpPostReferenceAsync<TEntity, TPostDto>(this IDbService db, TPostDto dto)
+        where TEntity : class where TPostDto : class
+    {
+        try
+        {
+            var entity = await db.AddAsync<TEntity, TPostDto>(dto);
+            if (await db.SaveChangesAsync())
+            {
+                var node = typeof(TEntity).Name.ToLower();
+                return Results.Created($"/{node}s/", entity);
+            }
+        }
+        catch
+        {
+            //return Results.NotFound();
+        }
+
+        return Results.BadRequest($"Couldn't add the {typeof(TEntity).Name} entity.");
+    } 
+
     public static async Task<IResult> HttpSingleAsync<TEntity, TDto>(this IDbService db, int id)
         where TEntity : class, IEntity where TDto : class
     {
         var result = await db.SingleAsync<TEntity, TDto>(id);
-        if (result is null) return Results.NotFound();
+        if (result is null) 
+            return Results.NotFound();
+
         return Results.Ok(result);
     }
     public static async Task<IResult> HttpGetAsync<TEntity, TDto>(this IDbService db)
@@ -48,7 +95,8 @@ public static class HttpExtensions
         try
         {
             db.Update<TEntity, TPutDto>(dto);
-            if (await db.SaveChangesAsync()) return Results.NoContent();
+            if (await db.SaveChangesAsync()) 
+                return Results.NoContent();
         }
         catch
         {
@@ -61,9 +109,11 @@ public static class HttpExtensions
     {
         try
         {
-            if (!await db.DeleteAsync<TEntity>(id)) return Results.NotFound();
+            if (!await db.DeleteAsync<TEntity>(id)) 
+                return Results.NotFound();
 
-            if (await db.SaveChangesAsync()) return Results.NoContent();
+            if (await db.SaveChangesAsync()) 
+                return Results.NoContent();
         }
         catch
         {
