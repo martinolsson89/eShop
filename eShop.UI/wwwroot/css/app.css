@@ -30,3 +30,37 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.category {
+    color: #555;
+}
+
+.checkbox:checked + .check-label {
+    background-color: #000;
+    color: #fff;
+}
+
+.radio:checked + .radio-label {
+    border-color: #000;
+}
+.bg-black {
+    background-color: #000;
+}
+.bg-red {
+    background-color: #b32121;
+}
+.bg-blue {
+    background-color: #0000cd;
+}
+.bg-green {
+    background-color: #008000;
+}
+/* Replace with the exact purple you want */
+.dot {
+    display: inline-block;
+    margin-right: .5rem;
+    border-radius: 50%;
+}
