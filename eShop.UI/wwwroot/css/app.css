@@ -1,5 +1,13 @@
-h1:focus {
-    outline: none;
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
 }
 
 #blazor-error-ui {
@@ -30,9 +38,47 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }
+
+code {
+    color: #c02d76;
+}
 body {
     font-family: 'Open Sans', sans-serif;
 }
+
 .cart-count {
     top: 0;
     right: 0;
@@ -42,14 +88,17 @@ body {
     margin-right: -8px;
     font-size: 9pt;
 }
+
 h2 {
     color: #0d3344;
     font-weight: bold;
 }
+
 h6 {
     color: #0d3344;
     font-weight: bold;
 }
+
 @media screen and (max-width: 470px) {
     #aside-menu, #viewport {
         height: auto !important;
