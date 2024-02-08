@@ -42,3 +42,17 @@ body {
     margin-right: -8px;
     font-size: 9pt;
 }
+h2 {
+    color: #0d3344;
+    font-weight: bold;
+}
+h6 {
+    color: #0d3344;
+    font-weight: bold;
+}
+@media screen and (max-width: 470px) {
+    #aside-menu, #viewport {
+        height: auto !important;
+        flex-direction: column;
+    }
+}
