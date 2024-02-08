@@ -3,7 +3,7 @@
     public class CategoryHttpClient
     {
         private readonly HttpClient _httpClient;
-        private string _baseAddress = "https://localhost:7001/api/";
+        public string _baseAddress = "https://localhost:7001/api/";
 
         public CategoryHttpClient(HttpClient httpClient)
         {
