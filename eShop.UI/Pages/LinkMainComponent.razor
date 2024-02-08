@@ -5,12 +5,21 @@
     <ul class="list-unstyled">
         @foreach (var link in LinkGroup!.LinkOptions)
         {
-            <LinkComponent LinkOption="link" />
+            <LinkComponent LinkOption="link" OnLinkClick="OnClick" />
         }
     </ul>
 </div>
 
 
 @code {
+    [Parameter] public EventCallback<int> OnLinkClick { get; set; }
     [Parameter] public LinkGroup? LinkGroup { get; set; }
+
+    void OnClick(int id)
+    {
+        if (OnLinkClick.HasDelegate)
+        {
+            OnLinkClick.InvokeAsync(id);
+        }
+    }
 }
