@@ -1,7 +1,7 @@
 ﻿@using eShop.UI.Models.Link;
 
 <aside id="aside-menu" class="d-flex flex-column m-2 ms-0 mt-0 p-2 pt-0 bg-body-tertiary vh-100" style="min-width: 160px; max-width: 200px;">
-    @foreach (var group in CategoryLinkGroups)
+    @foreach (var group in Service.CategoryLinkGroups)
     {
         <LinkMainComponent LinkGroup="group" OnLinkClick="OnClick" />
     }
@@ -141,13 +141,18 @@
 
 @code
 {
-    [Parameter] public EventCallback<int> OnLinkClick { get; set; }
+    [CascadingParameter(Name = "Service")] public UIService? Service { get; set; }
+    [Parameter] public EventCallback OnChange { get; set; }
+    
     async Task OnClick(int id)
     {
-       
+        if (OnChange.HasDelegate)
+        {
+            OnChange.InvokeAsync();
+        }
     }
 
-    List<LinkGroup> CategoryLinkGroups { get; set; } = new()
+    /*List<LinkGroup> CategoryLinkGroups { get; set; } = new()
     {
         new LinkGroup()
         {
@@ -160,6 +165,6 @@
                 new LinkOption {Id = 4, Name = "Family car", IsSelected = false }
             }
         }
-    };
+    };*/
 
 }

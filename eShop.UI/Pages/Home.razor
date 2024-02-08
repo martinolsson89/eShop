@@ -1,6 +1,5 @@
-﻿@using eShop.UI.Pages;
-
-@page "/"
+﻿@page "/"
+@inject UIService Service;
 
 <PageTitle>Home</PageTitle>
 
@@ -8,13 +7,23 @@
 <section id="viewport" class="py-2 vh-100">
 
     <div class="shadow-lg p-5 mx-5 d-flex">
+        <CascadingValue Value="Service" Name="Service">
         <!-- Sidebar -->
         <div class="flex-shrink-1 me-4">
-            <AsideComponent/>
+            <AsideComponent OnChange="OnChange"/>
         </div>
         <!-- Main content -->
         <div class="flex-wrap w-100 pt-3">
             <MainComponent/>
         </div>
+        </CascadingValue>
     </div>
 </section>
+
+@code
+{
+    void OnChange()
+    {
+
+    }
+}
