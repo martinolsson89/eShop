@@ -1,0 +1,21 @@
+﻿@if (LinkOption is not null)
+{
+    <div class="button-container">
+        <button class="category mb-1 @(LinkOption.IsSelected ? "ps-0" : "ps-2" )" style="background: none; border: none; padding: 0; cursor: pointer;" @onclick="OnClick">
+            @if(LinkOption.IsSelected)
+            {
+                <i class="fas fa-angle-right"></i>
+            }
+            @LinkOption?.Name
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public LinkOption? LinkOption { get; set; }
+
+    void OnClick()
+    {
+        
+    }
+}
