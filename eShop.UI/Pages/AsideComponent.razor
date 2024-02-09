@@ -1,6 +1,6 @@
 ﻿@using eShop.UI.Models.Link;
 
-<aside id="aside-menu" class="d-flex flex-column m-2 ms-0 mt-0 p-2 pt-0 bg-body-tertiary vh-100" style="min-width: 160px; max-width: 200px;">
+<aside id="aside-menu" class="d-flex flex-column m-2 ms-0 mt-0 p-2 pt-0 vh-100" style="min-width: 160px; max-width: 200px;">
     @foreach (var group in Service!.CategoryLinkGroups)
     {
         <LinkMainComponent LinkGroup="group" OnLinkClick="OnClick" />
@@ -156,9 +156,10 @@
 
     async Task OnClick(int id)
     {
-        if (OnChange.HasDelegate)
+        if (OnChange.HasDelegate && Service is not null)
         {
-            OnChange.InvokeAsync();
+            await Service.OnCategoryLinkClick(id);
+            await OnChange.InvokeAsync();
         }
     }
 

@@ -15,6 +15,7 @@ public class Program
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddSingleton<UIService>();
         builder.Services.AddHttpClient<CategoryHttpClient>();
+        builder.Services.AddHttpClient<ProductHttpClient>();
         ConfigureAutoMapper();
 
         await builder.Build().RunAsync();

@@ -1,5 +1,10 @@
+using eShop.API.DTO;
+using eShop.API.Extensions.Extensions;
 using eShop.Data.Contexts;
+using eShop.Data.Entities;
+using eShop.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace eShop.API.Products
 {
@@ -22,7 +27,7 @@ namespace eShop.API.Products
                     options.UseSqlServer(
                         builder.Configuration.GetConnectionString("ElectronicShopConnection")));
 
-//CORS (Cross Origin Resource Sharing)
+            //CORS (Cross Origin Resource Sharing)
             builder.Services.AddCors(policy =>
             {
                 policy.AddPolicy("CorsAllAccessPolicy", opt =>
@@ -31,6 +36,8 @@ namespace eShop.API.Products
                         .AllowAnyMethod()
                 );
             });
+
+            RegisterServices();
 
             var app = builder.Build();
 
@@ -45,30 +52,52 @@ namespace eShop.API.Products
 
             app.UseAuthorization();
 
+            RegisterEndpoints();
+
             // Configure CORS
             app.UseCors("CorsAllAccessPolicy");
 
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi();
-
             app.Run();
+
+            
+
+            void RegisterEndpoints()
+            {
+                app.AddEndpoint<Product, ProductPostDTO, ProductPutDTO, ProductGetDTO>();
+                app.MapGet($"/api/productsbycategory/" + "{categoryId}", async (IDbService db, int categoryId) =>
+                {
+                    try
+                    {
+                        var result = await ((ProductDbService)db).GetProductsByCategoryAsync(categoryId);
+                        return Results.Ok(result);
+                    }
+                    catch
+                    {
+                    }
+
+                    return Results.BadRequest($"Couldn't get the requested products of type {typeof(Product).Name}.");
+                });
+
+            }
+
+            void RegisterServices()
+            {
+                ConfigureAutoMapper();
+                builder.Services.AddScoped<IDbService, ProductDbService>();
+            }
+
+            void ConfigureAutoMapper()
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Product, ProductPostDTO>().ReverseMap();
+                    cfg.CreateMap<Product, ProductPutDTO>().ReverseMap();
+                    cfg.CreateMap<Product, ProductGetDTO>().ReverseMap();
+                    cfg.CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
+                });
+                var mapper = config.CreateMapper();
+                builder.Services.AddSingleton(mapper);
+            }
         }
     }
 }
