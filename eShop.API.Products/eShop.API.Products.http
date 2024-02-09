@@ -1,0 +1,6 @@
+@eShop.API.Products_HostAddress = http://localhost:5226
+
+GET {{eShop.API.Products_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

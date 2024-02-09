@@ -143,7 +143,17 @@
 {
     [CascadingParameter(Name = "Service")] public UIService? Service { get; set; }
     [Parameter] public EventCallback OnChange { get; set; }
-    
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Service is not null)
+        {
+            await Service.GetLinkGroup();
+            await OnChange.InvokeAsync();
+        }
+    }
+
     async Task OnClick(int id)
     {
         if (OnChange.HasDelegate)

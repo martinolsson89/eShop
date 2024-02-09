@@ -4,19 +4,30 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace eShop.UI;
 
-    public class Program
+public class Program
+{
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
+
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        builder.Services.AddSingleton<UIService>();
+        builder.Services.AddHttpClient<CategoryHttpClient>();
+        ConfigureAutoMapper();
+
+        await builder.Build().RunAsync();
+
+        void ConfigureAutoMapper()
         {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
-            builder.RootComponents.Add<HeadOutlet>("head::after");
-
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddSingleton<UIService>();
-            builder.Services.AddHttpClient<CategoryHttpClient>();
-
-            await builder.Build().RunAsync();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<CategoryGetDTO, LinkOption>().ReverseMap();
+            });
+            var mapper = config.CreateMapper();
+            builder.Services.AddSingleton(mapper);
         }
     }
+}
 
