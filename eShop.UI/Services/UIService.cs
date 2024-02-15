@@ -34,6 +34,9 @@ public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient produc
     {
         CurrentCategoryId = id;
         await GetProductsAsync();
+
+        Products.ForEach(p => p.Colors!.First().IsSelected = true);
+
         CategoryLinkGroups[0].LinkOptions.ForEach(l => l.IsSelected = false);
         CategoryLinkGroups[0].LinkOptions.Single(l => l.Id.Equals(CurrentCategoryId)).IsSelected = true;
 
