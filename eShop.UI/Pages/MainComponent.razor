@@ -1,4 +1,5 @@
-﻿﻿<main class="d-flex flex-wrap p-3 pt-2 align-items-start">
+﻿@using eShop.UI.Extensions
+@*﻿<main class="d-flex flex-wrap p-3 pt-2 align-items-start">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <span>Showing 1-8 of 40 products</span>
@@ -53,4 +54,72 @@
         </div>
         <!-- Repeat for each product card -->
     </div>
-</main>
+</main>*@
+
+﻿<main>
+<div class="d-flex mb-3">
+            <span>Showing @Service?.Products.Count cars</span>
+</div>
+    <div class="row d-flex flex-wrap">
+    <!-- Product card -->
+    @foreach (var product in Service!.Products)
+        {
+            
+                <div class="card col-md-3 m-3" style="width: 20rem;">
+                <img src="@product.PictureUrl" alt="Placeholder image for a car" class="pt-3 card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <h6>@product.Year</h6>
+                        <p class="card-text">@product.Description</p>
+                    </div>
+                <div class="d-flex card-footer bg-white g-0 justify-content-start">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                        <label class="btn btn-outline-dark btn-radio" for="btnradio1">S</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                        <label class="btn btn-outline-dark btn-radio" for="btnradio2">M</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                        <label class="btn btn-outline-dark btn-radio" for="btnradio3">XXL</label>
+                    </div>
+                    <div class="btn-group mx-2" role="group" aria-label="Basic radio toggle button group">
+
+                        <input type="radio" class="btn-check" name="color-@product.Id-1" id="color-@product.Id"
+                               autocomplete="off">
+                        <label class="btn btn-sm btn-outline-dark pt-2"
+                               style="background-color: #FFF; color: #000"
+                               for="color-@product.Id-1"><i class="bi-check"></i></label>
+
+                        <input type="radio" class="btn-check" name="color-@product.Id-2" id="color-@product.Id"
+                               autocomplete="off">
+                        <label class="btn btn-sm btn-outline-dark pt-2"
+                               style="background-color: #000; color: #FFF"
+                               for="color-@product.Id-2"><i class="bi-check"></i></label>
+
+                        <input type="radio" class="btn-check" name="color-@product.Id-3" id="color-@product.Id"
+                               autocomplete="off">
+                        <label class="btn btn-sm btn-outline-dark pt-2"
+                               style="background-color: green; color: #FFF"
+                               for="color-@product.Id-3"><i class="bi-check"></i></label>
+                    </div>
+
+                    <button class="btn btn-sm btn-success" @onclick="AddToCart"><i class="bi-cart"></i></button>
+                </div>
+                </div>
+        }
+    
+    </div>
+ </main>
+ 
+@code{
+     [CascadingParameter(Name = "Service")] public UIService? Service { get; set; }
+     [Parameter] public EventCallback OnChange { get; set; }
+
+     void AddToCart()
+     {
+
+     }
+
+}

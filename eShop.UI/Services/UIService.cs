@@ -4,7 +4,6 @@ namespace eShop.UI.Services;
 public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp ,IMapper mapper)
 {
     public List<CategoryGetDTO> Categories { get; set; } = [];
-
     public List<ProductGetDTO> Products { get; private set; } = [];
     public List<LinkGroup> CategoryLinkGroups { get; private set; } = 
     [
@@ -28,6 +27,7 @@ public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient produc
         Categories = await categoryHttp.GetCategoriesAsync();
         CategoryLinkGroups[0].LinkOptions = mapper.Map<List<LinkOption>>(Categories);
         var linkOption = CategoryLinkGroups[0].LinkOptions.FirstOrDefault();
+        linkOption!.IsSelected = true;
     }
 
     public async Task OnCategoryLinkClick(int id)

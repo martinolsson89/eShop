@@ -3,6 +3,9 @@
 public class ProductPostDTO
 {
     public string Name { get; set; } = string.Empty;
+    public int Year { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string PictureUrl { get; set; } = string.Empty;
 }
 public class ProductPutDTO : ProductPostDTO
 {
