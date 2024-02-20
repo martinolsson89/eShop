@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using eShop.UI.Services;
+using eShop.UI.Storage.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -14,6 +16,8 @@ public class Program
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddSingleton<UIService>();
+        builder.Services.AddBlazoredLocalStorageAsSingleton();
+        builder.Services.AddSingleton<IStorageService ,LocalStorage>();
         builder.Services.AddHttpClient<CategoryHttpClient>();
         builder.Services.AddHttpClient<ProductHttpClient>();
         ConfigureAutoMapper();

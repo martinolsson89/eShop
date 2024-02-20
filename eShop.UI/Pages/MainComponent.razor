@@ -1,4 +1,8 @@
 ﻿@using eShop.UI.Extensions
+@using eShop.UI.Storage.Services
+@inject IStorageService StorageService
+
+
 @*﻿<main class="d-flex flex-wrap p-3 pt-2 align-items-start">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -128,9 +132,11 @@
          color.IsSelected = true;
      }
 
-     void AddToCart(ProductGetDTO product)
+     async Task AddToCart(ProductGetDTO product)
      {
-
+         // await StorageService.SetAsync("MyKey", product);
+         // var prod = await StorageService.GetAsync<ProductGetDTO>("MyKey");
+         // await StorageService.RemoveAsync("MyKey");
      }
 
 }
