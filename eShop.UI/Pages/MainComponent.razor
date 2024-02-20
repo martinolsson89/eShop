@@ -94,7 +94,7 @@
                             
                         </div>
 
-                        <button class="btn btn-sm btn-success" @onclick="AddToCart"><i class="bi-cart"></i></button>
+                        <button class="btn btn-sm btn-success" @onclick="() => AddToCart(product)"><i class="bi-cart"></i></button>
                     </div>
                 </div>
         }
@@ -128,7 +128,7 @@
          color.IsSelected = true;
      }
 
-     void AddToCart()
+     void AddToCart(ProductGetDTO product)
      {
 
      }
