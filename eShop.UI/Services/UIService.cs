@@ -1,10 +1,13 @@
 ﻿
+using eShop.UI.Storage.Services;
+
 namespace eShop.UI.Services;
 
-public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp ,IMapper mapper)
+public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp ,IMapper mapper, IStorageService storageService)
 {
     public List<CategoryGetDTO> Categories { get; set; } = [];
     public List<ProductGetDTO> Products { get; private set; } = [];
+    public List<CartItemDTO> CartItems { get; set; } = [];
     public List<LinkGroup> CategoryLinkGroups { get; private set; } = 
     [
         new LinkGroup
@@ -46,5 +49,34 @@ public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient produc
 
     public async Task GetProductsAsync() => Products = await productHttp.GetProductsAsync(CurrentCategoryId);
 
+    // Function to Get items from storage
+    public async Task<T> ReadStorage<T>(string key)// where T : class
+    {
+        //if (string.IsNullOrEmpty(key) || storage is null) return new T();
+        return await storageService.GetAsync<T>(key);
+    }
+
+    // Function to Get single item from storage
+
+    public async Task<T> ReadSingleStorage<T>(string key) => await storageService!.GetAsync<T>(key);
+
+
+    // Function to Save to storage
+    public async Task SaveToStorage<T>(string key, T value)
+    {
+        if (string.IsNullOrEmpty(key) || storageService is null) 
+            return;
+        
+        await storageService.SetAsync(key, value);
+    } 
+
+    // Function to Remove from storage
+    public async Task RemoveFromStorage(string key)
+    {
+        if (string.IsNullOrEmpty(key) || storageService is null) 
+            return;
+        
+        await storageService.RemoveAsync(key);
+    }
 
 }

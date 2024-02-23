@@ -29,6 +29,7 @@ public class Program
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<CategoryGetDTO, LinkOption>().ReverseMap();
+                cfg.CreateMap<ProductGetDTO, CartItemDTO>().ReverseMap();
             });
             var mapper = config.CreateMapper();
             builder.Services.AddSingleton(mapper);

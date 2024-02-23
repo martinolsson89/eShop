@@ -3,7 +3,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<HeaderComponent/>
+<HeaderComponent UICartService="Service" />
 <section id="viewport" class="py-2 vh-100">
 
     <div class="shadow-lg p-3 mx-5 d-flex" style="min-width: 630px;">
@@ -13,7 +13,7 @@
             <AsideComponent OnChange="OnChange"/>
         </div>
         <!-- Main content -->
-            <MainComponent/>
+            <MainComponent OnChange="OnChange"/>
         </CascadingValue>
     </div>
 </section>

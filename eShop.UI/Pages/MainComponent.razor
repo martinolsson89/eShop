@@ -1,6 +1,8 @@
 ﻿@using eShop.UI.Extensions
 @using eShop.UI.Storage.Services
-@inject IStorageService StorageService
+@inject IMapper mapper
+@* @inject IStorageService StorageService *@
+
 
 
 @*﻿<main class="d-flex flex-wrap p-3 pt-2 align-items-start">
@@ -134,9 +136,22 @@
 
      async Task AddToCart(ProductGetDTO product)
      {
+        var cartItem = mapper.Map<CartItemDTO>(product);
+        cartItem.Color = product.Colors!.FirstOrDefault(c => c.IsSelected);
+        Service!.CartItems.Add(cartItem);
+        await Service!.SaveToStorage("CartItems", Service!.CartItems);
+
+        if (OnChange.HasDelegate)
+            await OnChange.InvokeAsync();
+
          // await StorageService.SetAsync("MyKey", product);
+
          // var prod = await StorageService.GetAsync<ProductGetDTO>("MyKey");
+         // var prod = await Service!.ReadSingleStorage<ProductGetDTO>("MyKey");
+
          // await StorageService.RemoveAsync("MyKey");
+         //Service!.CartItems.Remove(cartItem);
+         //await Service!.RemoveFromStorage("CartItems");
      }
 
 }
