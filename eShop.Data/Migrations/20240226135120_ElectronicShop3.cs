@@ -5,11 +5,25 @@
 namespace eShop.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ElectronicShop : Migration
+    public partial class ElectronicShop3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BrandName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OptionType = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -55,19 +69,17 @@ namespace eShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Fuels",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FuelName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OptionType = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Fuels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +94,29 @@ namespace eShop.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sizes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BrandId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,6 +192,30 @@ namespace eShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductFuel",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    FuelId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductFuel", x => new { x.ProductId, x.FuelId });
+                    table.ForeignKey(
+                        name: "FK_ProductFuel_Fuels_FuelId",
+                        column: x => x.FuelId,
+                        principalTable: "Fuels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductFuel_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductSizes",
                 columns: table => new
                 {
@@ -196,6 +255,16 @@ namespace eShop.Data.Migrations
                 column: "ColorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductFuel_FuelId",
+                table: "ProductFuel",
+                column: "FuelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_BrandId",
+                table: "Products",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductSizes_SizeId",
                 table: "ProductSizes",
                 column: "SizeId");
@@ -214,6 +283,9 @@ namespace eShop.Data.Migrations
                 name: "ProductColors");
 
             migrationBuilder.DropTable(
+                name: "ProductFuel");
+
+            migrationBuilder.DropTable(
                 name: "ProductSizes");
 
             migrationBuilder.DropTable(
@@ -226,10 +298,16 @@ namespace eShop.Data.Migrations
                 name: "Colors");
 
             migrationBuilder.DropTable(
+                name: "Fuels");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Sizes");
+
+            migrationBuilder.DropTable(
+                name: "Brands");
         }
     }
 }

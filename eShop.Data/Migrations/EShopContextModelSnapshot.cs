@@ -21,6 +21,26 @@ namespace eShop.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("eShop.Data.Entities.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BrandName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OptionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
             modelBuilder.Entity("eShop.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -105,6 +125,26 @@ namespace eShop.Data.Migrations
                     b.ToTable("Filters");
                 });
 
+            modelBuilder.Entity("eShop.Data.Entities.Fuel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FuelName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OptionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fuels");
+                });
+
             modelBuilder.Entity("eShop.Data.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -112,6 +152,9 @@ namespace eShop.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -129,6 +172,8 @@ namespace eShop.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
 
                     b.ToTable("Products");
                 });
@@ -161,6 +206,21 @@ namespace eShop.Data.Migrations
                     b.HasIndex("ColorId");
 
                     b.ToTable("ProductColors");
+                });
+
+            modelBuilder.Entity("eShop.Data.Entities.ProductFuel", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FuelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "FuelId");
+
+                    b.HasIndex("FuelId");
+
+                    b.ToTable("ProductFuel");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.ProductSize", b =>
@@ -213,6 +273,17 @@ namespace eShop.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("eShop.Data.Entities.Product", b =>
+                {
+                    b.HasOne("eShop.Data.Entities.Brand", "Brand")
+                        .WithMany("Products")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
             modelBuilder.Entity("eShop.Data.Entities.ProductCategory", b =>
                 {
                     b.HasOne("eShop.Data.Entities.Category", null)
@@ -243,6 +314,21 @@ namespace eShop.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("eShop.Data.Entities.ProductFuel", b =>
+                {
+                    b.HasOne("eShop.Data.Entities.Fuel", null)
+                        .WithMany()
+                        .HasForeignKey("FuelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eShop.Data.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("eShop.Data.Entities.ProductSize", b =>
                 {
                     b.HasOne("eShop.Data.Entities.Product", null)
@@ -256,6 +342,11 @@ namespace eShop.Data.Migrations
                         .HasForeignKey("SizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("eShop.Data.Entities.Brand", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

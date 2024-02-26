@@ -11,5 +11,11 @@ public class Product : IEntity
     public List<Category>? Categories { get; set; }
     public List<Color>? Colors { get; set; }
     public List<Size>? Sizes { get; set; }
+    public List<Fuel>? Fuels { get; set; }
 
-}
+    public int BrandId { get; set; }
+    public Brand? Brand { get; set; }
+
+    }
+    
+

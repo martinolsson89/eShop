@@ -99,6 +99,12 @@ namespace eShop.API.Products
                     cfg.CreateMap<Color, ColorPostDTO>().ReverseMap();
                     cfg.CreateMap<Color, ColorPutDTO>().ReverseMap();
                     cfg.CreateMap<Color, ColorGetDTO>().ReverseMap();
+                    cfg.CreateMap<Brand, BrandPostDTO>().ReverseMap();
+                    cfg.CreateMap<Brand, BrandPutDTO>().ReverseMap();
+                    cfg.CreateMap<Brand, BrandGetDTO>().ReverseMap();
+                    cfg.CreateMap<Fuel, FuelPostDTO>().ReverseMap();
+                    cfg.CreateMap<Fuel, FuelPutDTO>().ReverseMap();
+                    cfg.CreateMap<Fuel, FuelGetDTO>().ReverseMap();
                     cfg.CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
                 });
                 var mapper = config.CreateMapper();

@@ -15,6 +15,8 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
     public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
     public DbSet<ProductSize> ProductSizes => Set<ProductSize>();
     public DbSet<ProductColor> ProductColors => Set<ProductColor>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Fuel> Fuels => Set<Fuel>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,6 +27,8 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
             .HasKey(pc => new { pc.ProductId, pc.ColorId });
         builder.Entity<ProductSize>()
             .HasKey(ps => new { ps.ProductId, ps.SizeId });
+        builder.Entity<ProductFuel>()
+            .HasKey(pf => new { pf.ProductId, pf.FuelId });
         builder.Entity<ProductCategory>()
             .HasKey(pc => new { pc.ProductId, pc.CategoryId });
         builder.Entity<CategoryFilter>()
@@ -60,5 +64,24 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
             .UsingEntity<ProductColor>();
         #endregion
 
+        #region CarFuel Many-to-Many Relationship
+
+        builder.Entity<Product>()
+            .HasMany(p => p.Fuels)
+            .WithMany(f => f.Products)
+            .UsingEntity<ProductFuel>();
+
+        #endregion
+
+        #region CarBrand One-to-Many Relationship
+        builder.Entity<Product>()
+            .HasOne(b => b.Brand)
+            .WithMany(c => c.Products)
+            .HasForeignKey(b => b.BrandId);
+        #endregion
     }
+
+       
+
+
 }
