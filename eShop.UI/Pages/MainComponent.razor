@@ -84,7 +84,7 @@
                             {
                                 <input type="radio" class="btn-check" name="btnradio-@product.Id" id="fuel-@product.Id-@fuel.Id" 
                                        autocomplete="off" @onclick="() => OnSizeClick(product, fuel)" checked>
-                                <label class="btn btn-outline-dark btn-radio" for="size-@product.Id-@fuel.Id">@fuel.FuelName</label>
+                                <label class="btn btn-outline-dark btn-radio" for="fuel-@product.Id-@fuel.Id">@fuel.FuelName</label>
                             }
                         </div>
 
@@ -138,6 +138,8 @@
      {
         var cartItem = mapper.Map<CartItemDTO>(product);
         cartItem.Color = product.Colors!.FirstOrDefault(c => c.IsSelected);
+        cartItem.Fuel = product.Fuels!.FirstOrDefault(f => f.IsSelected);
+        cartItem.Brand = product.Brand;
         Service!.CartItems.Add(cartItem);
         await Service!.SaveToStorage("CartItems", Service!.CartItems);
 
