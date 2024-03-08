@@ -1,0 +1,14 @@
+﻿@using eShop.UI.Models.Filter
+@if(Filter is not null)
+  {
+      <div class="d-flex justify-content-between mx-2 mb-2">
+          <div>@Filter.Name</div>
+          <input type="range" class="mx-1 w-75" min="@Filter.MinValue" max="@Filter.MaxValue" @bind="Filter.SelectedValue" />
+          <div>@Filter.SelectedValue</div>
+      </div>
+  }
+
+@code {
+    [Parameter]
+    public FilterOption? Filter { get; set; }
+}

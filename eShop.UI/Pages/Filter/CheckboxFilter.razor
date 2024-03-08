@@ -1,0 +1,14 @@
+﻿@using eShop.UI.Models.Filter
+
+﻿@if (Filter is not null)
+{
+<div class="ps-2 pb-1">
+    <input type="checkbox" @bind="Filter.IsSelected" />
+    @Filter.Name
+</div>
+}
+
+@code {
+    [Parameter]
+    public FilterOption? Filter { get; set; }
+}

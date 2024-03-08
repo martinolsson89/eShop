@@ -1,0 +1,39 @@
+﻿<main>
+    <div class="d-flex mb-3">
+        <span>Showing @Service?.Products.Count cars</span>
+    </div>
+    <div class="row d-flex flex-wrap">
+        @*@foreach (var product in Service!.Products)
+        {
+            <div class="card col-md-3 m-3" style="width: 20rem;">
+                <img src="@product.PictureUrl" alt="Placeholder image for a car" class="pt-3 card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">@product?.Brand.BrandName @product!.Name</h5>
+                    <h6>@product!.Year</h6>
+                    <p class="card-text">@product.Description</p>
+                </div>
+                <div class="d-flex card-footer bg-white g-0 justify-content-start">
+
+
+                    <button class="btn btn-sm btn-warning me-2">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </div>
+            </div>
+        }*@
+
+    </div>
+</main>
+@code
+{
+    [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
+    [Parameter] public EventCallback OnChange { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Service is not null)
+        { 
+            await Service.GetProductsAsync();
+        }
+    }
+}

@@ -8,15 +8,19 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
 
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Filter> Filters => Set<Filter>();
-    public DbSet<Size> Sizes => Set<Size>();
     public DbSet<Color> Colors => Set<Color>();
     public DbSet<Product> Products => Set<Product>();
-    public DbSet<CategoryFilter> CategoryFilters => Set<CategoryFilter>();
-    public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
-    public DbSet<ProductSize> ProductSizes => Set<ProductSize>();
-    public DbSet<ProductColor> ProductColors => Set<ProductColor>();
     public DbSet<Brand> Brands => Set<Brand>();
     public DbSet<Fuel> Fuels => Set<Fuel>();
+    public DbSet<CategoryFilter> CategoryFilters => Set<CategoryFilter>();
+    public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    public DbSet<ProductColor> ProductColors => Set<ProductColor>();
+    public DbSet<ProductFuel> ProductFuels => Set<ProductFuel>();
+    // public DbSet<FilterType> FilterTypes => Set<FilterType>();
+    // public DbSet<Option> Options => Set<Option>();
+
+
+    
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,8 +29,6 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
         #region Composite Keys
         builder.Entity<ProductColor>()
             .HasKey(pc => new { pc.ProductId, pc.ColorId });
-        builder.Entity<ProductSize>()
-            .HasKey(ps => new { ps.ProductId, ps.SizeId });
         builder.Entity<ProductFuel>()
             .HasKey(pf => new { pf.ProductId, pf.FuelId });
         builder.Entity<ProductCategory>()
@@ -48,13 +50,6 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
             .HasMany(p => p.Categories)
             .WithMany(c => c.Products)
             .UsingEntity<ProductCategory>();
-        #endregion
-
-        #region ProductSize Many-to-Many Relationship
-        builder.Entity<Product>()
-            .HasMany(p => p.Sizes)
-            .WithMany(c => c.Products)
-            .UsingEntity<ProductSize>();
         #endregion
 
         #region ProductColor Many-to-Many Relationship
@@ -79,6 +74,18 @@ public class EShopContext(DbContextOptions<EShopContext> builder) : DbContext(bu
             .WithMany(c => c.Products)
             .HasForeignKey(b => b.BrandId);
         #endregion
+        
+       //  #region OptionFilter One-to-Many Relationship
+       // builder.Entity<Filter>()
+       //     .HasMany(c => c.Options)
+       //     .WithOne(f => f.Filter);
+       // #endregion
+       //
+       // #region FilterType One-to-Many Relationship
+       // builder.Entity<FilterType>()
+       //     .HasMany(ft => ft.Filters)
+       //     .WithOne(f => f.FilterType);
+       // #endregion
     }
 
        

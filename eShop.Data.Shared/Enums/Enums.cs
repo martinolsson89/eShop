@@ -2,7 +2,7 @@
 
 public enum OptionType
 {
-    Checkbox, RadioButton, Slider
+    Checkbox, RadioButton, Range
 }
 
-public enum FuelType { Petrol, Diesel, Electric, Hybrid}
+//public enum FuelType { Petrol, Diesel, Electric, Hybrid}

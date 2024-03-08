@@ -11,8 +11,8 @@ using eShop.Data.Contexts;
 namespace eShop.Data.Migrations
 {
     [DbContext(typeof(EShopContext))]
-    [Migration("20240226135120_ElectronicShop3")]
-    partial class ElectronicShop3
+    [Migration("20240306171942_init db")]
+    partial class initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,57 +223,26 @@ namespace eShop.Data.Migrations
 
                     b.HasIndex("FuelId");
 
-                    b.ToTable("ProductFuel");
-                });
-
-            modelBuilder.Entity("eShop.Data.Entities.ProductSize", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "SizeId");
-
-                    b.HasIndex("SizeId");
-
-                    b.ToTable("ProductSizes");
-                });
-
-            modelBuilder.Entity("eShop.Data.Entities.Size", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OptionType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sizes");
+                    b.ToTable("ProductFuels");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.CategoryFilter", b =>
                 {
-                    b.HasOne("eShop.Data.Entities.Category", null)
+                    b.HasOne("eShop.Data.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eShop.Data.Entities.Filter", null)
+                    b.HasOne("eShop.Data.Entities.Filter", "Filter")
                         .WithMany()
                         .HasForeignKey("FilterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Filter");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.Product", b =>
@@ -289,62 +258,59 @@ namespace eShop.Data.Migrations
 
             modelBuilder.Entity("eShop.Data.Entities.ProductCategory", b =>
                 {
-                    b.HasOne("eShop.Data.Entities.Category", null)
+                    b.HasOne("eShop.Data.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eShop.Data.Entities.Product", null)
+                    b.HasOne("eShop.Data.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.ProductColor", b =>
                 {
-                    b.HasOne("eShop.Data.Entities.Color", null)
+                    b.HasOne("eShop.Data.Entities.Color", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eShop.Data.Entities.Product", null)
+                    b.HasOne("eShop.Data.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.ProductFuel", b =>
                 {
-                    b.HasOne("eShop.Data.Entities.Fuel", null)
+                    b.HasOne("eShop.Data.Entities.Fuel", "Fuel")
                         .WithMany()
                         .HasForeignKey("FuelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eShop.Data.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("eShop.Data.Entities.ProductSize", b =>
-                {
-                    b.HasOne("eShop.Data.Entities.Product", null)
+                    b.HasOne("eShop.Data.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eShop.Data.Entities.Size", null)
-                        .WithMany()
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Fuel");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("eShop.Data.Entities.Brand", b =>

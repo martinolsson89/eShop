@@ -8,17 +8,18 @@ namespace eShop.Data.Services;
 
 public class ProductDbService(EShopContext db, IMapper mapper) : DbService(db, mapper)
 {
-    // public override async Task<List<TDto>> GetAsync<TEntity, TDto>()
-    // {
-    //     //IncludeNavigationsFor<Filter>();
-    //     //IncludeNavigationsFor<Product>();
-    //     var result = await base.GetAsync<TEntity, TDto>();
-    //     return result;
-    // }
+    public override async Task<List<TDto>> GetAsync<TEntity, TDto>()
+    {
+        IncludeNavigationsFor<Category>();
+        IncludeNavigationsFor<Color>();
+        IncludeNavigationsFor<Brand>();
+        IncludeNavigationsFor<Fuel>();
+        var result = await base.GetAsync<TEntity, TDto>();
+        return result;
+    }
     public async Task<List<ProductGetDTO>> GetProductsByCategoryAsync(int categoryId)
     {
         IncludeNavigationsFor<Color>();
-        IncludeNavigationsFor<Size>();
         IncludeNavigationsFor<Brand>();
         IncludeNavigationsFor<Fuel>();
         var productIds = GetAsync<ProductCategory>(pc => pc.CategoryId.Equals(categoryId))

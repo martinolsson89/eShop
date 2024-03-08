@@ -64,6 +64,12 @@ namespace eShop.API.Products
             void RegisterEndpoints()
             {
                 app.AddEndpoint<Product, ProductPostDTO, ProductPutDTO, ProductGetDTO>();
+                app.AddEndpoint<Color, ColorPostDTO, ColorPutDTO, ColorGetDTO>();
+                app.AddEndpoint<Brand, BrandPostDTO, BrandPutDTO, BrandGetDTO>();
+                app.AddEndpoint<Fuel, FuelPostDTO, FuelPutDTO, FuelGetDTO>();
+                app.AddEndpoint<ProductCategory, ProductCategoryPostDTO, ProductCategoryDeleteDTO>();
+                app.AddEndpoint<ProductColor, ProductColorPostDTO, ProductColorDeleteDTO>();
+                app.AddEndpoint<ProductFuel, ProductFuelPostDTO, ProductFuelDeleteDTO>();
                 app.MapGet($"/api/productsbycategory/" + "{categoryId}", async (IDbService db, int categoryId) =>
                 {
                     try
@@ -93,9 +99,6 @@ namespace eShop.API.Products
                     cfg.CreateMap<Product, ProductPostDTO>().ReverseMap();
                     cfg.CreateMap<Product, ProductPutDTO>().ReverseMap();
                     cfg.CreateMap<Product, ProductGetDTO>().ReverseMap();
-                    cfg.CreateMap<Size, SizePostDTO>().ReverseMap();
-                    cfg.CreateMap<Size, SizePutDTO>().ReverseMap();
-                    cfg.CreateMap<Size, SizeGetDTO>().ReverseMap();
                     cfg.CreateMap<Color, ColorPostDTO>().ReverseMap();
                     cfg.CreateMap<Color, ColorPutDTO>().ReverseMap();
                     cfg.CreateMap<Color, ColorGetDTO>().ReverseMap();
@@ -105,7 +108,14 @@ namespace eShop.API.Products
                     cfg.CreateMap<Fuel, FuelPostDTO>().ReverseMap();
                     cfg.CreateMap<Fuel, FuelPutDTO>().ReverseMap();
                     cfg.CreateMap<Fuel, FuelGetDTO>().ReverseMap();
-                    cfg.CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
+                    cfg.CreateMap<ProductCategory, ProductCategoryPostDTO>().ReverseMap();
+                    cfg.CreateMap<ProductCategory, ProductCategoryDeleteDTO>().ReverseMap();
+                    cfg.CreateMap<ProductColor, ProductColorPostDTO>().ReverseMap();
+                    cfg.CreateMap<ProductColor, ProductColorDeleteDTO>().ReverseMap();
+                    cfg.CreateMap<ProductFuel, ProductFuelPostDTO>().ReverseMap();
+                    cfg.CreateMap<ProductFuel, ProductFuelDeleteDTO>().ReverseMap();
+
+                    
                 });
                 var mapper = config.CreateMapper();
                 builder.Services.AddSingleton(mapper);

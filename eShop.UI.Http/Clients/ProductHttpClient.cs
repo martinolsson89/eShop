@@ -37,5 +37,27 @@ namespace eShop.UI.Http.Clients
                 return [];
             }
         }
+
+        // Overload, if no category is specified, retrieve all cars.
+        public async Task<List<ProductGetDTO>> GetProductsAsync()
+        {
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = "products";
+                using HttpResponseMessage response = await _httpClient.GetAsync(relativePath);
+                response.EnsureSuccessStatusCode();
+
+                var resultStream = await response.Content.ReadAsStreamAsync();
+                var result = await JsonSerializer.DeserializeAsync<List<ProductGetDTO>>(resultStream,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return result ?? [];
+            }
+            catch (Exception ex)
+            {
+                return [];
+            }
+        }
     }
 }

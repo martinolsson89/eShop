@@ -3,65 +3,6 @@
 @inject IMapper mapper
 @* @inject IStorageService StorageService *@
 
-
-
-@*﻿<main class="d-flex flex-wrap p-3 pt-2 align-items-start">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <span>Showing 1-8 of 40 products</span>
-        </div>
-    </div>
-    <div class="row">
-        <!-- Product card -->
-        <div class="col-md-4 mb-3" style="min-width: 18rem;">
-            <div class="card h-70">
-                <img src="Images/car1.png" alt="Placeholder image for a car" class="card-img-top">
-                <div class="card-body">
-                    <h6 class="card-title">BMW X3</h6>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet est a mollis venenatis.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3" style="min-width: 18rem;">
-            <div class="card h-70">
-                <img src="Images/car2.png" alt="Placeholder image for a car" class="card-img-top">
-                <div class="card-body">
-                    <h6 class="card-title">Volvo XC60</h6>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet est a mollis venenatis.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3" style="min-width: 18rem;">
-            <div class="card h-70">
-                <img src="Images/car3.png" alt="Placeholder image for a car" class="card-img-top">
-                <div class="card-body">
-                    <h6 class="card-title">Volvo XC40</h6>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet est a mollis venenatis.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3" style="min-width: 18rem;">
-            <div class="card h-70">
-                <img src="Images/car4.webp" alt="Placeholder image for a car" class="card-img-top">
-                <div class="card-body">
-                    <h6 class="card-title">Tesla Model S</h6>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet est a mollis venenatis.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3" style="min-width: 18rem;">
-            <div class="card h-70">
-                <img src="Images/car5.webp" alt="Placeholder image for a car" class="card-img-top">
-                <div class="card-body">
-                    <h6 class="card-title">Tesla Model X</h6>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet est a mollis venenatis.</p>
-                </div>
-            </div>
-        </div>
-        <!-- Repeat for each product card -->
-    </div>
-</main>*@
-
 ﻿<main>
 <div class="d-flex mb-3">
             <span>Showing @Service?.Products.Count cars</span>
@@ -79,11 +20,12 @@
                         <p class="card-text">@product.Description</p>
                     </div>
                     <div class="d-flex card-footer bg-white g-0 justify-content-start">
+
                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                             @foreach (var fuel in product.Fuels!)
                             {
-                                <input type="radio" class="btn-check" name="btnradio-@product.Id" id="fuel-@product.Id-@fuel.Id" 
-                                       autocomplete="off" @onclick="() => OnSizeClick(product, fuel)" checked>
+                                <input type="radio" class="btn-check" name="btnradio-@product.Id" id="fuel-@product.Id-@fuel.Id"
+                                       autocomplete="off" @onclick="() => OnFuelClick(product, fuel)">
                                 <label class="btn btn-outline-dark btn-radio" for="fuel-@product.Id-@fuel.Id">@fuel.FuelName</label>
                             }
                         </div>
@@ -91,13 +33,13 @@
                         <div class="btn-group mx-2" role="group" aria-label="Basic radio toggle button group">
                             @foreach (var color in product.Colors!)
                             {
-                            <input type="radio" class="btn-check" name="color-@product.Id-@color.Id" id="color-@product.Id-@color.Id"
-                                   autocomplete="off" @onclick="() => OnColorClick(product, color)">
+                                <input type="radio" class="btn-check" name="color-@product.Id-@color.Id" id="color-@product.Id-@color.Id"
+                                       autocomplete="off" @onclick="() => OnColorClick(product, color)">
                                 <label class="btn btn-sm btn-outline-dark pt-2"
-                                       style="background-color: @color.BkColorHex ; color: @(color.IsSelected ? @color.ColorHex : @color.BkColorHex)"
-                                   for="color-@product.Id-@color.Id"><i class="bi-check"></i></label>
+                                       style="background-color: @color.BkColorHex; color: @(color.IsSelected ? @color.ColorHex : @color.BkColorHex)"
+                                       for="color-@product.Id-@color.Id"><i class="bi-check"></i></label>
                             }
-                            
+
                         </div>
 
                         <button class="btn btn-sm btn-success" @onclick="() => AddToCart(product)"><i class="bi-cart"></i></button>
@@ -122,7 +64,7 @@
          }
      }
 
-     void OnSizeClick(ProductGetDTO product, FuelGetDTO fuel)
+     void OnFuelClick(ProductGetDTO product, FuelGetDTO fuel)
      {
          product.Fuels!.ForEach(f => f.IsSelected = false);
          fuel.IsSelected = true;
@@ -140,6 +82,16 @@
         cartItem.Color = product.Colors!.FirstOrDefault(c => c.IsSelected);
         cartItem.Fuel = product.Fuels!.FirstOrDefault(f => f.IsSelected);
         cartItem.Brand = product.Brand;
+
+        // If no Colour is selected, just choose an available one
+        if (cartItem.Color == null)
+            cartItem.Color = product.Colors!.FirstOrDefault();
+
+        // If no Fuel is selected, just choose an available one
+        if (cartItem.Fuel == null)
+            cartItem.Fuel = product.Fuels!.FirstOrDefault();
+
+
         Service!.CartItems.Add(cartItem);
         await Service!.SaveToStorage("CartItems", Service!.CartItems);
 

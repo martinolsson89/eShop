@@ -5,7 +5,7 @@
 namespace eShop.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ElectronicShop3 : Migration
+    public partial class initdb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,20 +80,6 @@ namespace eShop.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fuels", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sizes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OptionType = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sizes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,7 +178,7 @@ namespace eShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductFuel",
+                name: "ProductFuels",
                 columns: table => new
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false),
@@ -200,41 +186,17 @@ namespace eShop.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductFuel", x => new { x.ProductId, x.FuelId });
+                    table.PrimaryKey("PK_ProductFuels", x => new { x.ProductId, x.FuelId });
                     table.ForeignKey(
-                        name: "FK_ProductFuel_Fuels_FuelId",
+                        name: "FK_ProductFuels_Fuels_FuelId",
                         column: x => x.FuelId,
                         principalTable: "Fuels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductFuel_Products_ProductId",
+                        name: "FK_ProductFuels_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductSizes",
-                columns: table => new
-                {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    SizeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductSizes", x => new { x.ProductId, x.SizeId });
-                    table.ForeignKey(
-                        name: "FK_ProductSizes_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductSizes_Sizes_SizeId",
-                        column: x => x.SizeId,
-                        principalTable: "Sizes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -255,19 +217,14 @@ namespace eShop.Data.Migrations
                 column: "ColorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductFuel_FuelId",
-                table: "ProductFuel",
+                name: "IX_ProductFuels_FuelId",
+                table: "ProductFuels",
                 column: "FuelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductSizes_SizeId",
-                table: "ProductSizes",
-                column: "SizeId");
         }
 
         /// <inheritdoc />
@@ -283,10 +240,7 @@ namespace eShop.Data.Migrations
                 name: "ProductColors");
 
             migrationBuilder.DropTable(
-                name: "ProductFuel");
-
-            migrationBuilder.DropTable(
-                name: "ProductSizes");
+                name: "ProductFuels");
 
             migrationBuilder.DropTable(
                 name: "Filters");
@@ -302,9 +256,6 @@ namespace eShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Sizes");
 
             migrationBuilder.DropTable(
                 name: "Brands");

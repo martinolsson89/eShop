@@ -1,0 +1,18 @@
+﻿@using eShop.UI.Models.Filter
+﻿@if (Filter is not null)
+{
+<EditForm Model="Filter" class="d-flex flex-column">
+    <InputRadioGroup @bind-Value="Filter.SelectedValue">
+        @foreach (var option in Filter.Options)
+        {
+            @* Change .valid.modified:not([type = checkbox]) in app.css to remove square around radiobuttons*@
+            <div class="ps-2 pb-1"><InputRadio class="outline-none me-1" Value="@option.Id" />@option.Name</div>
+        }
+    </InputRadioGroup>
+</EditForm>
+}
+
+@code {
+    [Parameter]
+    public FilterOption? Filter { get; set; }
+}

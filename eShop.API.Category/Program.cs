@@ -61,13 +61,14 @@ void ConfigureAutoMapper()
     var config = new MapperConfiguration(cfg =>
     {
         cfg.CreateMap<Category, CategoryPostDTO>().ReverseMap();
-        cfg.CreateMap<Category, CategoryPutDTO>().ReverseMap();
         cfg.CreateMap<Category, CategoryGetDTO>().ReverseMap();
+        cfg.CreateMap<Category, CategoryPutDTO>().ReverseMap();
         cfg.CreateMap<Category, CategorySmallGetDTO>().ReverseMap();
-        cfg.CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
-        //cfg.CreateMap<Filter, FilterGetDTO>().ReverseMap();
-        //cfg.CreateMap<Size, OptionDTO>().ReverseMap();
-        //cfg.CreateMap<Color, OptionDTO>().ReverseMap();
+
+        cfg.CreateMap<Filter, FilterGetDTO>().ReverseMap();
+        cfg.CreateMap<Color, OptionDTO>().ReverseMap();
+        cfg.CreateMap<Fuel, OptionDTO>().ReverseMap();
+        cfg.CreateMap<Brand, OptionDTO>().ReverseMap();
     });
     var mapper = config.CreateMapper();
     builder.Services.AddSingleton(mapper);

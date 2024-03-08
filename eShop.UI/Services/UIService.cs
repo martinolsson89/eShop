@@ -1,12 +1,14 @@
 ﻿
+using eShop.UI.Models.Filter;
 using eShop.UI.Storage.Services;
 
 namespace eShop.UI.Services;
 
-public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp ,IMapper mapper, IStorageService storageService)
+public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp ,IMapper mapper, IStorageService storageService, FilterHttpClient filterHttp)
 {
     public List<CategoryGetDTO> Categories { get; set; } = [];
     public List<ProductGetDTO> Products { get; private set; } = [];
+    public List<FilterGroup> FilterGroups { get; private set; } = [];
     public List<CartItemDTO> CartItems { get; set; } = [];
     public List<LinkGroup> CategoryLinkGroups { get; private set; } = 
     [
@@ -43,6 +45,7 @@ public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient produc
         CategoryLinkGroups[0].LinkOptions.ForEach(l => l.IsSelected = false);
         CategoryLinkGroups[0].LinkOptions.Single(l => l.Id.Equals(CurrentCategoryId)).IsSelected = true;
 
+        
         // var filters = Categories.Single(c => c.Id.Equals(CurrentCategoryId)).Filters;
         // FilterGroups = mapper.Map<List<FilterGroup>>(filters);
     }
@@ -77,6 +80,27 @@ public class UIService(CategoryHttpClient categoryHttp, ProductHttpClient produc
             return;
         
         await storageService.RemoveAsync(key);
+    }
+
+    public async Task FilterProducts()
+    {
+        var filterDTOs = FilterGroups
+            .Where(group => group.FilterOptions.Any(option => option.OptionType == group.OptionType && option.IsSelected))
+            .Select(group => new FilterRequestDTO
+            {
+                CategoryId = CurrentCategoryId,
+                OptionType = group.OptionType,
+                Id = group.Id,
+                Name = group.Name,
+                TypeName = group.TypeName,
+                Options = group.FilterOptions
+                    .Where(option => option.OptionType == group.OptionType && option.IsSelected)
+                    .Select(option => mapper.Map<OptionDTO>(option))
+                    .ToList()
+            }).ToList();
+
+        if(filterDTOs.Count > 0)
+            Products = await filterHttp.FilterProductsAsync(filterDTOs);
     }
 
 }
