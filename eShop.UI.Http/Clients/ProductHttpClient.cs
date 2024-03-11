@@ -1,5 +1,6 @@
 ﻿
 
+using System.Text;
 using System.Text.Json;
 
 namespace eShop.UI.Http.Clients
@@ -59,5 +60,41 @@ namespace eShop.UI.Http.Clients
                 return [];
             }
         }
+
+        //function to delete a product
+        public async Task DeleteProductAsync(int id)
+        {
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = $"products/{id}";
+                using HttpResponseMessage response = await _httpClient.DeleteAsync(relativePath);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                //return Results.NotFound();
+            }
+        }
+
+        public async Task EditProductAsync(ProductPutDTO product)
+        {
+            //edit a product
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = $"products/{product.Id}";
+                var productJson = new StringContent(JsonSerializer.Serialize(product), Encoding.UTF8, "application/json");
+                using HttpResponseMessage response = await _httpClient.PutAsync(relativePath, productJson);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                //return Results.NotFound();
+            }
+        }
+
+        
+
     }
 }

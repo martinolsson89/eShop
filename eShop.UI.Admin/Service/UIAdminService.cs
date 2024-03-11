@@ -27,4 +27,11 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
 
     public async Task GetProductsAsync() =>
         Products = await productHttp.GetProductsAsync();
+
+   //Function to delete a product
+    public async Task DeleteProductAsync(int id) =>
+        await productHttp.DeleteProductAsync(id);
+
+    public async Task EditProductAsync(ProductPutDTO product) =>
+        await productHttp.EditProductAsync(product);
 }

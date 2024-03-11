@@ -1,4 +1,7 @@
-﻿<main>
+﻿@using eShop.UI.Extensions
+<DeleteItem ProductDeleted="OnProductDeleted" @ref="deleteItemComponent" />
+<EditItem ProductEdited="OnProductEdited" @ref="editItemComponent" />
+<main>
     <div class="d-flex mb-3">
         <span>Showing @Service?.Products.Count cars</span>
     </div>
@@ -20,7 +23,39 @@
                 </div>
             </div>
         }*@
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Model</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Year</th>
+                <th scope="col">Description</th>
+                <th scope="col">Picture URL</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in Service!.Products)
+            {
+                <tr>
+                    <th scope="row">@product.Id</th>
+                    <td>@product.Name</td>
+                    <td>@product.Brand!.BrandName</td>
+                    <td>@product.Year</td>
+                    <td>@product.Description.Truncate(30)</td>
+                    <td>@product.PictureUrl</td>
+                    <td>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#edit"
+                                class="btn btn-sm btn-warning me-2" @onclick="() => ShowEditModal(product)">Edit</button>
 
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete"
+                                class="btn btn-sm btn-danger" @onclick="() => ShowDeleteModal(product)">Delete</button>
+                        @*<button class="btn btn-sm btn-danger" @onclick="() => DeleteProduct(product)">Delete</button>*@
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
     </div>
 </main>
 @code
@@ -28,12 +63,49 @@
     [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
     [Parameter] public EventCallback OnChange { get; set; }
 
-
     protected override async Task OnInitializedAsync()
     {
         if (Service is not null)
         { 
             await Service.GetProductsAsync();
         }
+    }
+
+    private DeleteItem? deleteItemComponent;
+
+    private async Task ShowDeleteModal(ProductGetDTO product)
+    {
+        if (deleteItemComponent != null)
+        {
+            await deleteItemComponent.ShowDeleteConfirmation(product);
+        }
+    }
+
+    private void OnProductDeleted(ProductGetDTO product)
+    {
+        // Remove the deleted product from the list
+        Service?.Products.Remove(product);
+        StateHasChanged(); // Re-render the component to reflect the changes
+    }
+
+    private EditItem? editItemComponent;
+
+    private async Task ShowEditModal(ProductGetDTO product)
+    {
+        if (editItemComponent != null)
+        {
+            await editItemComponent.ShowEditConfirmation(product);
+        }
+    }
+
+    private void OnProductEdited(ProductGetDTO product)
+    {
+        // Update the product in the list
+        var index = Service!.Products.FindIndex(p => p.Id == product.Id);
+        if (index != -1)
+        {
+            Service!.Products[index] = product;
+        }
+        StateHasChanged(); // Re-render the component to reflect the changes
     }
 }
