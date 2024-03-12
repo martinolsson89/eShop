@@ -1,6 +1,4 @@
-﻿
-
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 namespace eShop.UI.Http.Clients
@@ -93,6 +91,53 @@ namespace eShop.UI.Http.Clients
                 //return Results.NotFound();
             }
         }
+
+        public async Task<List<BrandGetDTO>> GetBrandsAsync()
+        {
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = "brands/";
+                using HttpResponseMessage response = await _httpClient.GetAsync(relativePath);
+                response.EnsureSuccessStatusCode();
+
+                var resultStream = await response.Content.ReadAsStreamAsync();
+                var result = await JsonSerializer.DeserializeAsync<List<BrandGetDTO>>(resultStream,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return result ?? [];
+            }
+            catch (Exception ex)
+            {
+                return [];
+            }
+        }
+
+        //GetBrandByIdAsync
+        public async Task<BrandGetDTO> GetBrandByIdAsync(int Id)
+        {
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = $"brands/{Id}";
+                using HttpResponseMessage response = await _httpClient.GetAsync(relativePath);
+                response.EnsureSuccessStatusCode();
+
+                var resultStream = await response.Content.ReadAsStreamAsync();
+                var result = await JsonSerializer.DeserializeAsync<BrandGetDTO>(resultStream,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return result ?? new BrandGetDTO();
+            }
+            catch (Exception ex)
+            {
+                return new BrandGetDTO();
+            }
+        }
+
+
+        
+
 
         
 

@@ -100,11 +100,11 @@
 
     private void OnProductEdited(ProductGetDTO product)
     {
-        // Update the product in the list
         var index = Service!.Products.FindIndex(p => p.Id == product.Id);
         if (index != -1)
         {
-            Service!.Products[index] = product;
+            // Update the entire product or just the necessary properties
+            Service.Products[index] = product;
         }
         StateHasChanged(); // Re-render the component to reflect the changes
     }

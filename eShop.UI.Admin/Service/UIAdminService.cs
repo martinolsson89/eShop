@@ -9,6 +9,7 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
 {
     List<CategoryGetDTO> Categories { get; set; } = [];
     public List<ProductGetDTO> Products { get; private set; } = [];
+    public List<BrandGetDTO> Brands { get; private set; } = [];
     public List<LinkGroup> CaregoryLinkGroups { get; private set; } =
     [
         new LinkGroup
@@ -34,4 +35,11 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
 
     public async Task EditProductAsync(ProductPutDTO product) =>
         await productHttp.EditProductAsync(product);
+
+    public async Task GetBrandsAsync() =>
+        Brands = await productHttp.GetBrandsAsync();
+
+    //GetBrandByIdAsync(SelectedBrandId)
+    public async Task<BrandGetDTO> GetBrandByIdAsync(int id) =>
+        await productHttp.GetBrandByIdAsync(id);
 }

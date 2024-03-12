@@ -1,4 +1,5 @@
-﻿<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+﻿@using System.Text
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,10 +15,37 @@
                         <span class="input-group-text" id="basic-addon1">Model</span>
                         <input type="text" class="form-control" @bind="SelectedProduct.Name" aria-label="Model" aria-describedby="basic-addon1">
                     </div>
-                    <div class="input-group mb-3">
+                    @*<div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Brand</span>
                         <input type="text" class="form-control" @bind="SelectedProduct.Brand!.BrandName" aria-label="Model" aria-describedby="basic-addon1">
+                    </div>*@
+                    @*<div class="mb-3">
+                        <p>Select Car Brand</p>
+                            <select class="form-select" aria-label="Default select example" @bind="SelectedBrandId">
+                            <option value="@SelectedProduct.BrandId" selected>@SelectedProduct.Brand!.BrandName</option>
+                            @foreach (var brand in Service!.Brands)
+                            {
+                                if (SelectedProduct.BrandId != brand.Id)
+                                {
+                                    <option value="@brand.Id">@brand.BrandName</option>
+                                }
+                            }
+                        </select>
+                    </div>*@
+                    <div class="mb-3">
+                        <p>Select Car Brand</p>
+                        <select class="form-select" @onchange="OnBrandChange" aria-label="Default select example">
+                            <option value="@SelectedProduct.BrandId" selected>@SelectedProduct.Brand!.BrandName</option>
+                            @foreach (var brand in Service!.Brands)
+                            {
+                                if (SelectedProduct.BrandId != brand.Id)
+                                {
+                                    <option value="@brand.Id">@brand.BrandName</option>
+                                }
+                            }
+                        </select>
                     </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Year</span>
                         <input type="text" class="form-control" @bind="SelectedProduct.Year" aria-label="Model" aria-describedby="basic-addon1">
@@ -54,17 +82,29 @@
 @code 
 { 
     [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
+    public EventCallback<ProductGetDTO> OnProductSelected { get; set; }
+    [Parameter] public EventCallback<ProductGetDTO> ProductEdited { get; set; }
+
+
     public string? ConfirmMessage { get; set; }
     public ProductGetDTO? SelectedProduct { get; set; }
-    public bool ShowSuccessMessage { get; set; } = false;
+    public bool ShowSuccessMessage { get; set; }
 
-    public EventCallback<ProductGetDTO> OnProductSelected { get; set; }
-    [Parameter]
-    public EventCallback<ProductGetDTO> ProductEdited { get; set; }
+    private int SelectedBrandId { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Service is not null)
+        {
+            await Service.GetBrandsAsync();
+        }
+    }
 
 
     public async Task ShowEditConfirmation(ProductGetDTO product)
     {
+        ShowSuccessMessage = false;
+
         SelectedProduct = product;
         ConfirmMessage = $"Edit {product.Brand?.BrandName} {product.Name}";
         await OnProductSelected.InvokeAsync(product);
@@ -73,13 +113,37 @@
 
     private async Task EditProduct()
     {
+        if(SelectedBrandId != 0)
+        {
+            SelectedProduct!.BrandId = SelectedBrandId;
+            // Assuming you have a method to fetch the updated brand by its ID
+            SelectedProduct.Brand = await Service.GetBrandByIdAsync(SelectedBrandId);
+        }
+
         if (SelectedProduct != null)
         {
             await Service!.EditProductAsync(SelectedProduct);
             ShowSuccessMessage = true;
             await ProductEdited.InvokeAsync(SelectedProduct);
-            SelectedProduct = null; // Reset after deletion
+            SelectedProduct = null; // Reset after edit
             StateHasChanged(); // Ensure the component re-renders to show the success message
+        }
+    }
+
+    private async Task OnBrandChange(ChangeEventArgs e)
+    {
+        if (e.Value is string valueString)
+        {
+            // Convert the selected value to int
+            if (int.TryParse(valueString, out int id))
+            {
+                SelectedBrandId = id;
+                // Perform further actions if needed, e.g., updating the UI or fetching related data
+            }
+            else
+            {
+                // Handle the case where the conversion fails, if necessary
+            }
         }
     }
 }
