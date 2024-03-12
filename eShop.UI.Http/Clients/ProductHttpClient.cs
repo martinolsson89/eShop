@@ -136,7 +136,23 @@ namespace eShop.UI.Http.Clients
         }
 
 
-        
+        //add a product
+        public async Task AddProductAsync(ProductGetDTO product)
+        {
+            try
+            {
+                // Use the relative path, not the base address here
+                string relativePath = "products";
+                var productJson =
+                    new StringContent(JsonSerializer.Serialize(product), Encoding.UTF8, "application/json");
+                using HttpResponseMessage response = await _httpClient.PostAsync(relativePath, productJson);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                //return Results.NotFound();
+            }
+        }
 
 
         

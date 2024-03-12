@@ -29,7 +29,7 @@
     [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
     public string? ConfirmMessage { get; set; }
     public ProductGetDTO? SelectedProduct { get; set; }
-    public bool ShowSuccessMessage { get; set; } = false;
+    public bool ShowSuccessMessage { get; set; }
 
     public EventCallback<ProductGetDTO> OnProductSelected { get; set; }
     [Parameter]
@@ -38,6 +38,8 @@
 
     public async Task ShowDeleteConfirmation(ProductGetDTO product)
     {
+        ShowSuccessMessage = false;
+
         SelectedProduct = product;
         ConfirmMessage = $"Are you sure you want to delete {product.Name}?";
         await OnProductSelected.InvokeAsync(product);

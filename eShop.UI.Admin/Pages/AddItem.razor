@@ -1,0 +1,120 @@
+﻿<div class="modal fade" id="add" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Add a new product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (!ShowSuccessMessage)
+                {
+                    @if (NewProduct != null)
+                    {
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Model</span>
+                            <input type="text" class="form-control" @bind="NewProduct.Name" aria-label="Model" aria-describedby="basic-addon1">
+                        </div>
+
+                        <div class="mb-3">
+                            <p>Select Car Brand</p>
+                            <select class="form-select" @onchange="OnBrandAdd" aria-label="Default select example">
+                                @foreach (var brand in Service!.Brands)
+                                {
+                                    <option value="@brand.Id">@brand.BrandName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Year</span>
+                            <input type="text" class="form-control" @bind="NewProduct.Year" aria-label="Model" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Description</span>
+                            <input type="text" class="form-control" @bind="NewProduct.Description" aria-label="Model" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Picture Url</span>
+                            <input type="text" class="form-control" placeholder="/Images/car1.png" @bind="NewProduct.PictureUrl" aria-label="Model" aria-describedby="basic-addon1">
+                        </div>
+
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-success" role="alert">
+                        Product edited successfully!
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                @if (!ShowSuccessMessage)
+                {
+                    <button type="button" class="btn btn-success" @onclick="() => AddProduct()">Add</button>
+                }
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+[CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
+[Parameter] public EventCallback OnProductAdded { get; set; }
+public EventCallback ProductAdded { get; set; }
+
+public bool ShowSuccessMessage { get; set; } = false;
+public int SelectedBrandId { get; set; } = 1;
+
+//Create a new ProductPostDTO
+public ProductGetDTO NewProduct { get; set; } = new ProductGetDTO();
+
+protected override async Task OnInitializedAsync()
+{
+    if (Service is not null)
+    {
+        await Service.GetBrandsAsync();
+    }
+}
+
+
+private async Task AddProduct()
+    {
+        if(SelectedBrandId != 0)
+        {
+            NewProduct!.BrandId = SelectedBrandId;
+            // Assuming you have a method to fetch the updated brand by its ID
+            NewProduct.Brand = await Service!.GetBrandByIdAsync(SelectedBrandId);
+        }
+
+        if (NewProduct != null)
+        {
+            await Service!.AddProductAsync(NewProduct);
+            ShowSuccessMessage = true;
+            await ProductAdded.InvokeAsync(NewProduct);
+            NewProduct = null; // Reset after edit
+
+            StateHasChanged(); // Ensure the component re-renders to show the success message
+        }
+
+        
+    }
+
+private async Task OnBrandAdd(ChangeEventArgs e)
+{
+    if (e.Value is string valueString)
+    {
+        // Convert the selected value to int
+        if (int.TryParse(valueString, out int id))
+        {
+            SelectedBrandId = id;
+            
+        }
+        else
+        {
+            return;
+        }
+    }
+}
+
+}

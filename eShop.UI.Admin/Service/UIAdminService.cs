@@ -42,4 +42,7 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
     //GetBrandByIdAsync(SelectedBrandId)
     public async Task<BrandGetDTO> GetBrandByIdAsync(int id) =>
         await productHttp.GetBrandByIdAsync(id);
+
+    public async Task AddProductAsync(ProductGetDTO product) =>
+    await productHttp.AddProductAsync(product);
 }

@@ -15,23 +15,7 @@
                         <span class="input-group-text" id="basic-addon1">Model</span>
                         <input type="text" class="form-control" @bind="SelectedProduct.Name" aria-label="Model" aria-describedby="basic-addon1">
                     </div>
-                    @*<div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">Brand</span>
-                        <input type="text" class="form-control" @bind="SelectedProduct.Brand!.BrandName" aria-label="Model" aria-describedby="basic-addon1">
-                    </div>*@
-                    @*<div class="mb-3">
-                        <p>Select Car Brand</p>
-                            <select class="form-select" aria-label="Default select example" @bind="SelectedBrandId">
-                            <option value="@SelectedProduct.BrandId" selected>@SelectedProduct.Brand!.BrandName</option>
-                            @foreach (var brand in Service!.Brands)
-                            {
-                                if (SelectedProduct.BrandId != brand.Id)
-                                {
-                                    <option value="@brand.Id">@brand.BrandName</option>
-                                }
-                            }
-                        </select>
-                    </div>*@
+                   
                     <div class="mb-3">
                         <p>Select Car Brand</p>
                         <select class="form-select" @onchange="OnBrandChange" aria-label="Default select example">
@@ -117,7 +101,7 @@
         {
             SelectedProduct!.BrandId = SelectedBrandId;
             // Assuming you have a method to fetch the updated brand by its ID
-            SelectedProduct.Brand = await Service.GetBrandByIdAsync(SelectedBrandId);
+            SelectedProduct.Brand = await Service!.GetBrandByIdAsync(SelectedBrandId);
         }
 
         if (SelectedProduct != null)
