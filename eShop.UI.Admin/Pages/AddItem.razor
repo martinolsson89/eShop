@@ -60,10 +60,10 @@
 
 @code {
 [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
-[Parameter] public EventCallback OnProductAdded { get; set; }
-public EventCallback ProductAdded { get; set; }
+[Parameter] public EventCallback<ProductGetDTO> ProductAdded { get; set; }
 
-public bool ShowSuccessMessage { get; set; } = false;
+
+public bool ShowSuccessMessage { get; set; }
 public int SelectedBrandId { get; set; } = 1;
 
 //Create a new ProductPostDTO
@@ -75,6 +75,11 @@ protected override async Task OnInitializedAsync()
     {
         await Service.GetBrandsAsync();
     }
+}
+
+public async Task ShowAddConfirmation()
+{
+        ResetForm();
 }
 
 
@@ -116,5 +121,13 @@ private async Task OnBrandAdd(ChangeEventArgs e)
         }
     }
 }
+
+    public void ResetForm()
+    {
+        NewProduct = new ProductGetDTO();
+        ShowSuccessMessage = false;
+        SelectedBrandId = 1; // Or set to a default or initial value as needed
+        StateHasChanged();
+    }
 
 }
