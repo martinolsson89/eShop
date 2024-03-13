@@ -1,5 +1,6 @@
 ﻿
 
+using System.Text;
 using System.Text.Json;
 
 namespace eShop.UI.Http.Clients
@@ -34,6 +35,13 @@ namespace eShop.UI.Http.Clients
                 return [];
             }
 
+        }
+        //AddCategoryAsync
+        public async Task AddCategoryAsync(CategoryGetDTO category)
+        {
+            var content = new StringContent(JsonSerializer.Serialize(category), Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PostAsync("", content);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

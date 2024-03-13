@@ -7,7 +7,7 @@ namespace eShop.UI.Admin.Service;
 
 public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient productHttp, IMapper mapper)
 {
-    List<CategoryGetDTO> Categories { get; set; } = [];
+    public List<CategoryGetDTO> Categories { get; set; } = [];
     public List<ProductGetDTO> Products { get; private set; } = [];
     public List<BrandGetDTO> Brands { get; private set; } = [];
     public List<LinkGroup> CaregoryLinkGroups { get; private set; } =
@@ -45,4 +45,9 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
 
     public async Task AddProductAsync(ProductGetDTO product) =>
     await productHttp.AddProductAsync(product);
+
+    public async Task AddCategoryAsync(CategoryGetDTO category)
+    {
+        await categoryHttp.AddCategoryAsync(category);
+    }
 }

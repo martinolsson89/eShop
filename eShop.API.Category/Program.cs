@@ -2,18 +2,18 @@ using eShop.API.Extensions.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Adds services to the DI container. This is crucial for configuring the app's services and middleware.
+builder.Services.AddEndpointsApiExplorer(); // Enables API explorer, helpful for Swagger.
+builder.Services.AddSwaggerGen(); // Adds Swagger generator services.
 
-// SQL Server Service Registration
+// Adds Entity Framework services to the DI container and configures 'UseSqlServer' as the database provider.
 builder.Services.AddDbContext<EShopContext>(
     options =>
         options.UseSqlServer(
             builder.Configuration.GetConnectionString("ElectronicShopConnection")));
 
 //CORS (Cross Origin Resource Sharing)
+// Configures CORS policy to allow any origin, header, and method, which is useful for cross-origin requests.
 builder.Services.AddCors(policy =>
 {
     policy.AddPolicy("CorsAllAccessPolicy", opt =>
@@ -25,7 +25,7 @@ builder.Services.AddCors(policy =>
 
 RegisterServices();
 
-var app = builder.Build();
+var app = builder.Build(); // Builds the WebApplication instance.
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -34,15 +34,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Redirects HTTP requests to HTTPS.
 
-RegisterEndpoints();
+RegisterEndpoints(); // Custom method to register API endpoints.
 
-// Configure CORS
-app.UseCors("CorsAllAccessPolicy");
+app.UseCors("CorsAllAccessPolicy"); // Applies the CORS policy configured above.
 
-app.Run();
+app.Run(); // Runs the application.
 
+
+// Custom method to register services. Scoped services are created once per client request.
 void RegisterServices()
 {
     ConfigureAutoMapper();

@@ -6,9 +6,10 @@
                 <h1 class="modal-title fs-5" id="deleteModalLabel">@ConfirmMessage</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body d-flex justify-content-center align-items-center flex-column">
                 @if (!ShowSuccessMessage)
                 {
+                    <img src="@SelectedProductImage" alt="Placeholder image for a car" class="mb-4" style="max-height: 150px;">
                     <button class="btn btn-danger" @onclick="() => DeleteProduct()">Confirm</button>
                 }
                 else
@@ -29,6 +30,7 @@
     [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
     public string? ConfirmMessage { get; set; }
     public ProductGetDTO? SelectedProduct { get; set; }
+    public string? SelectedProductImage { get; set; }
     public bool ShowSuccessMessage { get; set; }
 
     public EventCallback<ProductGetDTO> OnProductSelected { get; set; }
@@ -41,7 +43,8 @@
         ShowSuccessMessage = false;
 
         SelectedProduct = product;
-        ConfirmMessage = $"Are you sure you want to delete {product.Name}?";
+        SelectedProductImage = $"https://localhost:7160/{product.PictureUrl}";
+        ConfirmMessage = $"Are you sure you want to delete {product.Brand!.BrandName} {product.Name}?";
         await OnProductSelected.InvokeAsync(product);
         StateHasChanged(); // Add this line
     }

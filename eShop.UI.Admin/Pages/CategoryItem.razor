@@ -1,0 +1,76 @@
+﻿<div class="modal fade" id="category" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Add a new category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (!ShowSuccessMessage)
+                {
+                    @if (NewCategory != null)
+                    {
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Name</span>
+                            <input type="text" class="form-control" @bind="NewCategory.Name" aria-label="Model" aria-describedby="basic-addon1">
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-success" role="alert">
+                        Category successfully added!
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                @if (!ShowSuccessMessage)
+                {
+                    <button type="button" class="btn btn-success" @onclick="() => AddProduct()">Add</button>
+                }
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
+    [Parameter] public EventCallback<CategoryGetDTO> CategoryAdded { get; set; }
+
+
+    public bool ShowSuccessMessage { get; set; }
+    public int SelectedBrandId { get; set; } = 1;
+
+    //Create a new ProductPostDTO
+    public CategoryGetDTO NewCategory { get; set; } = new CategoryGetDTO();
+
+
+    public void ShowAddConfirmation()
+    {
+       ResetForm();
+    }
+
+
+    private async Task AddProduct()
+    {
+
+        if (NewCategory != null)
+        {
+            await Service!.AddCategoryAsync(NewCategory);
+            ShowSuccessMessage = true;
+            await CategoryAdded.InvokeAsync(NewCategory);
+
+            StateHasChanged(); // Ensure the component re-renders to show the success message
+        }
+    }
+
+    public void ResetForm()
+    {
+        NewCategory = new CategoryGetDTO();
+        ShowSuccessMessage = false;
+        StateHasChanged();
+    }
+
+}
+

@@ -43,7 +43,7 @@
                 else
                 {
                     <div class="alert alert-success" role="alert">
-                        Product edited successfully!
+                        Product added successfully!
                     </div>
                 }
             </div>
@@ -97,7 +97,6 @@ private async Task AddProduct()
             await Service!.AddProductAsync(NewProduct);
             ShowSuccessMessage = true;
             await ProductAdded.InvokeAsync(NewProduct);
-            NewProduct = null; // Reset after edit
 
             StateHasChanged(); // Ensure the component re-renders to show the success message
         }
