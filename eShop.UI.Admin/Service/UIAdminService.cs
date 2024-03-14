@@ -50,4 +50,7 @@ public class UIAdminService(CategoryHttpClient categoryHttp, ProductHttpClient p
     {
         await categoryHttp.AddCategoryAsync(category);
     }
+
+    public async Task GetCategoriesAsync() =>
+        Categories = await categoryHttp.GetCategoriesAsync();
 }

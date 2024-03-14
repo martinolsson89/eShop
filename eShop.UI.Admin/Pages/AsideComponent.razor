@@ -1,6 +1,7 @@
 ﻿@using eShop.UI.Admin.Service
 <AddItem ProductAdded="OnProductAdded" @ref="addItemComponent"/>
 <CategoryItem CategoryAdded="OnCategoryAdded" @ref="categoryItemComponent"/>
+<ViewCategoriesItem/>
 <aside id="aside-menu" class="d-flex flex-column m-2 ms-0 mt-0 p-2 pt-0 vh-100" style="min-width: 160px; max-width: 200px;">
     <div class="ps-3">
         <h6 class="font-weight-semibold">Admin Options</h6>
@@ -14,9 +15,12 @@
             <button class="category mb-1" data-bs-toggle="modal" data-bs-target="#category" style="background: none; border: none; padding: 0; cursor: pointer;" @onclick="() => ShowAddCategoryModal()">
                 Add Category
             </button>
-            @*<button class="category mb-1" data-bs-toggle="modal" data-bs-target="#category" style="background: none; border: none; padding: 0; cursor: pointer;" @onclick="() => ShowCategoryModal()">
+            <div class="button-container">
+                <button class="category mb-1" data-bs-toggle="modal" data-bs-target="#viewcategories" style="background: none; border: none; padding: 0; cursor: pointer;">
                 View Categories
-            </button>*@
+                </button>
+            </div>
+            
         </div>
     </div>
     <span class="border-bottom"></span>
@@ -77,5 +81,4 @@
         //if product is added, refresh the page
 
     }
-
 }

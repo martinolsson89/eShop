@@ -1,0 +1,37 @@
+﻿<div class="modal fade" id="viewcategories" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Categories:</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column">
+                
+                    @foreach (var category in Service!.Categories)
+                    {
+                        <div>
+                            <p>@category.Name</p>
+                        </div>
+                    }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter(Name = "Service")] public UIAdminService? Service { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Service is not null)
+        {
+            await Service.GetCategoriesAsync();
+        }
+    }
+}
+
+
