@@ -11,7 +11,7 @@ product filter.
 reusable and modular.
 - A Blazor WebAssembly UI where the customer can view products by category.
 
-## Exrea assignment
+## Extra assignment
 ###
 - Create an interface where administrators can add, remove, update, and read
 information about your products (CRUD).
